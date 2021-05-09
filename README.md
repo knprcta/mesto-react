@@ -18,5 +18,5 @@
 
 **GitHub Pages**
 
-- [Ссылка на проект в GitHub Pages](https://knprcta.github.io/mesto/)
+- [Ссылка на проект в GitHub Pages](https://knprcta.github.io/mesto-react/)
 
