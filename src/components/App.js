@@ -3,6 +3,7 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
+import EditProfilePopup from './EditProfilePopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api';
 import CurrentUserContext from '../contexts/CurrentUserContext';
@@ -17,10 +18,10 @@ function App() {
 
   React.useEffect(() => {
     api.getUserInfo()
-      .then(res => {
+      .then((res) => {
         setCurrentUser(res);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       })
   }, [])
@@ -50,6 +51,17 @@ function App() {
     setSelectedCard({});
   }
 
+  function handleUpdateUser(info) {
+    api.setUserInfo(info)
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -58,16 +70,7 @@ function App() {
           <Header />
           <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onCardClick={handleCardClick} />
           <Footer />
-          <PopupWithForm name="profile" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} button="Сохранить">
-            <section className="popup__field">
-              <input className="popup__input popup__input_name" type="text" name="name" id="userName-input" placeholder="Имя" required minLength="2" maxLength="40" />
-              <span className="popup__input-error" id="userName-input-error"></span>
-            </section>
-            <section className="popup__field">
-              <input className="popup__input popup__input_about" type="text" name="about" id="userAbout-input" placeholder="О себе" required minLength="2" maxLength="200" />
-              <span className="popup__input-error" id="userAbout-input-error"></span>
-            </section>
-          </PopupWithForm>
+          <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
           <PopupWithForm name="place" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} button="Создать">
             <section className="popup__field">
               <input className="popup__input popup__input_title" type="text" name="name" id="cardName-input" placeholder="Название" required minLength="2" maxLength="30" />
