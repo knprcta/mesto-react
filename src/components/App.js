@@ -7,6 +7,7 @@ import EditProfilePopup from './EditProfilePopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api';
 import CurrentUserContext from '../contexts/CurrentUserContext';
+import EditAvatarPopup from './EditAvatarPopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -62,6 +63,17 @@ function App() {
       })
   }
 
+  function handleUpdateAvatar(avatar) {
+    api.updateAvatar(avatar)
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -81,12 +93,7 @@ function App() {
               <span className="popup__input-error" id="cardLink-input-error"></span>
             </section>
           </PopupWithForm>
-          <PopupWithForm name="avatar" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} button="Обновить">
-            <section className="popup__field">
-              <input className="popup__input popup__input_avatar" type="url" name="avatar" id="userAvatar-input" placeholder="Ссылка на картинку" required />
-              <span className="popup__input-error" id="userAvatar-input-error"></span>
-            </section>
-          </PopupWithForm>
+          <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
           <PopupWithForm name="confirm" title="Вы уверены?" button="Да" />
           <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} />
 
