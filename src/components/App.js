@@ -20,34 +20,25 @@ function App() {
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    api.getUserInfo()
-      .then((res) => {
-        setCurrentUser(res);
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([userData, cards]) => {
+        setCurrentUser(userData);
+        setCards(cards);
       })
       .catch((err) => {
         console.log(err);
-      })
+      });
   }, [])
-
-  React.useEffect(() => {
-    api.getInitialCards()
-      .then(res => {
-        setCards(res);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }, []);
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
-    
+
     api.toogleLike(card._id, isLiked)
       .then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
       });
   }
-  
+
   function handleCardDelete(card) {
     api.deleteCard(card._id)
       .then(() => {
@@ -116,7 +107,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-       <div className="page__content">
+        <div className="page__content">
 
           <Header />
           <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onCardClick={handleCardClick} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />

@@ -5,6 +5,11 @@ function AddPlacePopup(props) {
   const [name, setName] = React.useState('');
   const [link, setLink] = React.useState('');
 
+  React.useEffect(() => {
+    setName('');
+    setLink('');
+  }, [props.isOpen]); 
+
   function handleNameChange(e) {
     setName(e.target.value);
   }
@@ -27,7 +32,7 @@ function AddPlacePopup(props) {
         <span className="popup__input-error" id="cardName-input-error"></span>
       </section>
       <section className="popup__field">
-        <input className="popup__input popup__input_link" type="url" name="link" id="cardLink-input" placeholder="Ссылка на картинку" required onChange={handleLinkChange} />
+        <input className="popup__input popup__input_link" type="url" name="link" id="cardLink-input" placeholder="Ссылка на картинку" required onChange={handleLinkChange} value={link} />
         <span className="popup__input-error" id="cardLink-input-error"></span>
       </section>
     </PopupWithForm>
